@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
+use Nbin\Transformers\LessonTransformer;
 
 class LessonsController extends Controller
 {
+    /**
+     * @var Nbin\Transformers\LessonTransformer
+     */
+    protected $lessonTransformer;
+
+    function __construct(LessonTransformer $lessonTransformer)
+    {
+        $this->lessonTransformer = $lessonTransformer;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +31,7 @@ class LessonsController extends Controller
     {
         $lessons = Lesson::all();
         return response([
-            'data' => $this->transformCollection($lessons)
+            'data' => $this->lessonTransformer->transformCollection($lessons->toArray())
         ],200);
     }
 
@@ -64,7 +75,7 @@ class LessonsController extends Controller
         }
 
         return response([
-            'data' => $this->transform($lesson)
+            'data' => $this->lessonTransformer->transform($lesson)
         ],200);
     }
 
@@ -99,19 +110,5 @@ class LessonsController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    private function transformCollection($lessons)
-    {
-        return array_map([$this, 'transform'],$lessons->toArray());
-    }
-
-    private function transform($lesson)
-    {
-            return [
-                'title' => $lesson['title'],
-                'body' => $lesson['body'],
-                'active' => (boolean) $lesson['some_bool']
-            ];
     }
 }

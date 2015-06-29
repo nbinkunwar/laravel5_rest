@@ -20,7 +20,8 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "App\\Models\\": "app/"
+            "App\\Models\\": "app/",
+          "Nbin\\": "nbin/"
         }
     },
     "autoload-dev": {
