@@ -20,7 +20,7 @@ class LessonsController extends Controller
     {
         $lessons = Lesson::all();
         return response([
-            'data' => $lessons->toArray()
+            'data' => $this->transformCollection($lessons)
         ],200);
     }
 
@@ -52,7 +52,20 @@ class LessonsController extends Controller
      */
     public function show($id)
     {
-        //
+        $lesson = Lesson::find($id);
+
+        if(!$lesson)
+        {
+            return response([
+                'error' => [
+                    'message' => 'Lesson does not exist'
+                ]
+            ],404);
+        }
+
+        return response([
+            'data' => $this->transform($lesson)
+        ],200);
     }
 
     /**
@@ -86,5 +99,19 @@ class LessonsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function transformCollection($lessons)
+    {
+        return array_map([$this, 'transform'],$lessons->toArray());
+    }
+
+    private function transform($lesson)
+    {
+            return [
+                'title' => $lesson['title'],
+                'body' => $lesson['body'],
+                'active' => (boolean) $lesson['some_bool']
+            ];
     }
 }
