@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use Nbin\Transformers\LessonTransformer;
 
-class LessonsController extends Controller
+class LessonsController extends ApiController
 {
     /**
      * @var Nbin\Transformers\LessonTransformer
@@ -30,9 +30,9 @@ class LessonsController extends Controller
     public function index()
     {
         $lessons = Lesson::all();
-        return response([
+        return $this->respond([
             'data' => $this->lessonTransformer->transformCollection($lessons->toArray())
-        ],200);
+        ]);
     }
 
     /**
@@ -64,19 +64,14 @@ class LessonsController extends Controller
     public function show($id)
     {
         $lesson = Lesson::find($id);
-
         if(!$lesson)
         {
-            return response([
-                'error' => [
-                    'message' => 'Lesson does not exist'
-                ]
-            ],404);
-        }
+            return $this->respondNotFound('Lesson does not exist');
+         }
 
-        return response([
+        return $this->respond([
             'data' => $this->lessonTransformer->transform($lesson)
-        ],200);
+        ]);
     }
 
     /**
