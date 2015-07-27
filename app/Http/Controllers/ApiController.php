@@ -73,4 +73,28 @@ class ApiController extends Controller{
            ]
         ]);
     }
+
+    /**
+     * @param $message
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+
+    public function respondCreated($message)
+    {
+        return $this->setStatusCode(Response::HTTP_CREATED)->respond([
+            'message' => $message
+        ]);
+    }
+
+    /**
+     * @param $message
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+
+    public function respondParametersRequired($message)
+    {
+        return $this->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY)->respond([
+            'message' => $message
+        ]);
+    }
 }

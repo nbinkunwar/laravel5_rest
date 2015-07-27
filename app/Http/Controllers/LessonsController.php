@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Input;
 use Nbin\Transformers\LessonTransformer;
 
 class LessonsController extends ApiController
@@ -20,6 +21,7 @@ class LessonsController extends ApiController
     function __construct(LessonTransformer $lessonTransformer)
     {
         $this->lessonTransformer = $lessonTransformer;
+//        $this->middleware('auth.basic',['on' => 'post']);
     }
 
     /**
@@ -52,7 +54,16 @@ class LessonsController extends ApiController
      */
     public function store()
     {
-        //
+        if( ! Input::get('title') or ! Input::get('body'))
+        {
+            return $this->respondParametersRequired('Parameters failed validation for a lesson');
+        }
+
+        Lesson::create(Input::all());
+
+        $this->respondCreated('Lesson successfully created');
+
+
     }
 
     /**
